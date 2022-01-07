@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\PaymentPlatform;
 use App\Services\PayPalService;
 use Illuminate\Support\Facades\Log;
+use App\Resolvers\PaymentPlatformResolver;
 
 class PaymentForm extends Component
 {
@@ -22,6 +23,16 @@ class PaymentForm extends Component
         'payment_platform' => 'required|exists:payment_platforms,id',
     ];
 
+    protected $paymentPlatformResolver;
+
+    // Al ponerlo como un parametro del constructor/boot crea la instancia de este paymenteresolver
+    public function boot(PaymentPlatformResolver $paymentPlatformResolver)
+    {
+
+        $this->paymentPlatformResolver = $paymentPlatformResolver;
+    }
+    
+
     public function mount()
     {
         $this->value = mt_rand(500, 100000) / 100;
@@ -33,12 +44,38 @@ class PaymentForm extends Component
     {
         $validatedData  = $this->validate();
         
-        Log::debug("prueba desde pay " . $this->currency);
-
-        $paymentPlatform = resolve(PayPalService::class);
+        $paymentPlatform = $this->paymentPlatformResolver
+            ->resolveService($this->payment_platform);
+        
+        // Añadimos el id de la plataforma de pago al la sesion
+        // para que sea utilizado cuando se solicite la aprobación
+        session()->put('paymentPlatformId', $this->payment_platform);
 
         return $paymentPlatform->handlePayment($validatedData);
 
+    }
+
+    public function approval()
+    {
+        if (session()->has('paymentPlatformId')) {
+
+            $paymentPlatformResolver = new PaymentPlatformResolver;
+            $paymentPlatform = $paymentPlatformResolver
+                ->resolveService(session()->get('paymentPlatformId'));
+    
+            return $paymentPlatform->handleApproval();
+        }
+        
+        return redirect()
+            ->route('dashboard')
+            ->withErrors('We cannot retrieve your payment platform. Try again, please.');
+    }
+
+    public function cancelled()
+    {
+        return redirect()
+            ->route('dashboard')
+            ->withErrors('You cancelled the payment');
     }
 
 

@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Resolvers\PaymentPlatformResolver;
 use App\Services\PayPalService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+    }
+
     public function approval()
     {
  

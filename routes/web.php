@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PaymentController;
+use App\Http\Livewire\PaymentForm;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,5 +23,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/payments/approval', [PaymentController::class, 'approval'])->name('approval');
-Route::get('/payments/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
+// Route::get('/payments/approval', [PaymentController::class, 'approval'])->name('approval');
+// Route::get('/payments/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
+Route::get('/payments/approval', [PaymentForm::class, 'approval'])->name('approval');
+Route::get('/payments/cancelled', [PaymentForm::class, 'cancelled'])->name('cancelled');
