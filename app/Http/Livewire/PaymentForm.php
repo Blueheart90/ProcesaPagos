@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Currency;
+use Illuminate\Http\Request;
 use App\Models\PaymentPlatform;
 use App\Services\PayPalService;
 use Illuminate\Support\Facades\Log;
@@ -11,8 +12,10 @@ use App\Resolvers\PaymentPlatformResolver;
 
 class PaymentForm extends Component
 {
+    // inputs form
     public $currency = 'eur';
-    public $value, $payment_platform;
+    public $value, $payment_platform, $payment_method;
+
 
 
     public $currencies, $paymentPlatforms;
@@ -43,6 +46,8 @@ class PaymentForm extends Component
     public function pay()
     {
         $validatedData  = $this->validate();
+
+        dd($this->payment_method);
         
         $paymentPlatform = $this->paymentPlatformResolver
             ->resolveService($this->payment_platform);
@@ -53,6 +58,11 @@ class PaymentForm extends Component
 
         return $paymentPlatform->handlePayment($validatedData);
 
+    }
+
+    public function prueba()
+    {
+        Log::debug("prueba desde js");
     }
 
     public function approval()
