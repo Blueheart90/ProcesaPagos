@@ -20,20 +20,15 @@ class PaymentForm extends Component
 
     public $currencies, $paymentPlatforms;
 
-    protected $rules = [
-        'value' => 'required|numeric|min:5',
-        'currency' => 'required|exists:currencies,iso',
-        'payment_platform' => 'required|exists:payment_platforms,id',
-    ];
 
-    protected $paymentPlatformResolver;
+    // protected $paymentPlatformResolver;
 
-    // Al ponerlo como un parametro del constructor/boot crea la instancia de este paymenteresolver
-    public function boot(PaymentPlatformResolver $paymentPlatformResolver)
-    {
+    // // Al ponerlo como un parametro del constructor/boot crea la instancia de este paymenteresolver
+    // public function boot(PaymentPlatformResolver $paymentPlatformResolver)
+    // {
 
-        $this->paymentPlatformResolver = $paymentPlatformResolver;
-    }
+    //     $this->paymentPlatformResolver = $paymentPlatformResolver;
+    // }
     
 
     public function mount()
@@ -43,50 +38,49 @@ class PaymentForm extends Component
         $this->paymentPlatforms = PaymentPlatform::all();
     }
 
-    public function pay()
-    {
-        $validatedData  = $this->validate();
+    // public function pay()
+    // {
+    //     $validatedData  = $this->validate();
 
-        dd($this->payment_method);
         
-        $paymentPlatform = $this->paymentPlatformResolver
-            ->resolveService($this->payment_platform);
+    //     $paymentPlatform = $this->paymentPlatformResolver
+    //         ->resolveService($this->payment_platform);
         
-        // Añadimos el id de la plataforma de pago al la sesion
-        // para que sea utilizado cuando se solicite la aprobación
-        session()->put('paymentPlatformId', $this->payment_platform);
+    //     // Añadimos el id de la plataforma de pago al la sesion
+    //     // para que sea utilizado cuando se solicite la aprobación
+    //     session()->put('paymentPlatformId', $this->payment_platform);
 
-        return $paymentPlatform->handlePayment($validatedData);
+    //     return $paymentPlatform->handlePayment($validatedData);
 
-    }
+    // }
 
     public function prueba()
     {
         Log::debug("prueba desde js");
     }
 
-    public function approval()
-    {
-        if (session()->has('paymentPlatformId')) {
+    // public function approval()
+    // {
+    //     if (session()->has('paymentPlatformId')) {
 
-            $paymentPlatformResolver = new PaymentPlatformResolver;
-            $paymentPlatform = $paymentPlatformResolver
-                ->resolveService(session()->get('paymentPlatformId'));
+    //         $paymentPlatformResolver = new PaymentPlatformResolver;
+    //         $paymentPlatform = $paymentPlatformResolver
+    //             ->resolveService(session()->get('paymentPlatformId'));
     
-            return $paymentPlatform->handleApproval();
-        }
+    //         return $paymentPlatform->handleApproval();
+    //     }
         
-        return redirect()
-            ->route('dashboard')
-            ->withErrors('We cannot retrieve your payment platform. Try again, please.');
-    }
+    //     return redirect()
+    //         ->route('dashboard')
+    //         ->withErrors('We cannot retrieve your payment platform. Try again, please.');
+    // }
 
-    public function cancelled()
-    {
-        return redirect()
-            ->route('dashboard')
-            ->withErrors('You cancelled the payment');
-    }
+    // public function cancelled()
+    // {
+    //     return redirect()
+    //         ->route('dashboard')
+    //         ->withErrors('You cancelled the payment');
+    // }
 
 
 

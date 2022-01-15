@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Livewire\PaymentForm;
 use Illuminate\Support\Facades\Route;
@@ -19,11 +20,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Route::get('/payments/approval', [PaymentController::class, 'approval'])->name('approval');
 // Route::get('/payments/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');
-Route::get('/payments/approval', [PaymentForm::class, 'approval'])->name('approval');
-Route::get('/payments/cancelled', [PaymentForm::class, 'cancelled'])->name('cancelled');
+Route::post('/payments/pay', [PaymentController::class, 'pay'])->name('pay');
+Route::get('/payments/approval', [PaymentController::class, 'approval'])->name('approval');
+Route::get('/payments/cancelled', [PaymentController::class, 'cancelled'])->name('cancelled');

@@ -38,7 +38,6 @@
         const stripe = Stripe('{{ config('services.stripe.key') }}');
         const elements = stripe.elements({locale: 'en'});
         const cardElement = elements.create('card');
-        
         cardElement.mount('#cardElement');
     </script>
     <script>
@@ -61,7 +60,8 @@
                 } else {
                     const tokenInput = document.getElementById('paymentMethod');
                     tokenInput.value = paymentMethod.id;
-                    console.log('holamundoooo');
+                    form.submit();
+                    
                     
                 }
             }

@@ -1,6 +1,7 @@
 <div class= "m-4 ">
 
-    <form id="paymentForm" wire:submit.prevent="pay">
+    <form action="{{ route('pay') }}" method="POST" id="paymentForm">
+        @csrf
         <div class="flex">
             <div class="mr-2 ">
                 <label for="value" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">How much you want to pay?</label>
