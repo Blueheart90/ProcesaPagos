@@ -44,6 +44,7 @@ class CurrencyConversionService
                 'compact' => 'ultra'
             ]
         );
+        // retorna el factor de conversion
         return $response->{strtoupper("{$from}_{$to}")};
     }
 
